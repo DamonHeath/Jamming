@@ -1,3 +1,5 @@
+import TrackList from '../TrackList/TrackList';
+
 function SearchResults() {
   return (
     <div
@@ -10,6 +12,7 @@ function SearchResults() {
       }}
     >
       <h2>Search Results</h2>
+      <TrackList />
     </div>
   );
 }
