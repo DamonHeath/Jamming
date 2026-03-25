@@ -1,8 +1,29 @@
+import { useState } from 'react';
 import SearchBar from '../SearchBar/SearchBar';
 import SearchResults from '../SearchResults/SearchResults';
 import Playlist from '../Playlist/Playlist';
 
 function App() {
+  const [searchResults] = useState([
+    { id: 1, name: 'Blinding Lights', artist: 'The Weeknd', album: 'After Hours' },
+    { id: 2, name: 'Levitating', artist: 'Dua Lipa', album: 'Future Nostalgia' },
+    { id: 3, name: 'As It Was', artist: 'Harry Styles', album: 'Harry’s House' },
+  ]);
+
+  const [playlistTracks, setPlaylistTracks] = useState([]);
+
+  const addTrack = (track) => {
+    const trackAlreadyAdded = playlistTracks.some(
+      (savedTrack) => savedTrack.id === track.id
+    );
+
+    if (trackAlreadyAdded) {
+      return;
+    }
+
+    setPlaylistTracks((prevTracks) => [...prevTracks, track]);
+  };
+
   return (
     <div style={{ padding: '2rem' }}>
       <h1 style={{ textAlign: 'center' }}>Jammming</h1>
@@ -12,8 +33,8 @@ function App() {
       </div>
 
       <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center' }}>
-        <SearchResults />
-        <Playlist />
+        <SearchResults tracks={searchResults} onAdd={addTrack} />
+        <Playlist tracks={playlistTracks} />
       </div>
     </div>
   );

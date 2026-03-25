@@ -1,4 +1,10 @@
-function Track() {
+function Track({ track, onAction, actionSymbol }) {
+  const handleClick = () => {
+    if (onAction) {
+      onAction(track);
+    }
+  };
+
   return (
     <div
       style={{
@@ -10,12 +16,14 @@ function Track() {
       }}
     >
       <div>
-        <h3 style={{ margin: 0 }}>Song Name</h3>
+        <h3 style={{ margin: 0 }}>{track.name}</h3>
         <p style={{ margin: '0.25rem 0 0', color: '#b3b3b3' }}>
-          Artist | Album
+          {track.artist} | {track.album}
         </p>
       </div>
+
       <button
+        onClick={handleClick}
         style={{
           backgroundColor: '#1db954',
           border: 'none',
@@ -26,7 +34,7 @@ function Track() {
           color: 'white',
         }}
       >
-        +
+        {actionSymbol}
       </button>
     </div>
   );

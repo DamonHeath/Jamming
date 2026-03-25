@@ -1,6 +1,6 @@
 import TrackList from '../TrackList/TrackList';
 
-function SearchResults() {
+function SearchResults({ tracks, onAdd }) {
   return (
     <div
       style={{
@@ -12,7 +12,7 @@ function SearchResults() {
       }}
     >
       <h2>Search Results</h2>
-      <TrackList />
+      <TrackList tracks={tracks} onAction={onAdd} actionSymbol="+" />
     </div>
   );
 }
