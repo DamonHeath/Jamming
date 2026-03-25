@@ -8,6 +8,7 @@ import {
   getStoredAccessToken,
   logoutSpotify,
   searchSpotify,
+  savePlaylistToSpotify,
 } from '../../utils/spotify';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
   const [authError, setAuthError] = useState('');
   const [searchError, setSearchError] = useState('');
   const [searchLoading, setSearchLoading] = useState(false);
+  const [saveStatus, setSaveStatus] = useState('');
 
   useEffect(() => {
     const initialiseAuth = async () => {
@@ -47,11 +49,9 @@ function App() {
   }, []);
 
   const addTrack = (track) => {
-    const trackAlreadyAdded = playlistTracks.some(
-      (savedTrack) => savedTrack.id === track.id
-    );
+    const exists = playlistTracks.some((savedTrack) => savedTrack.id === track.id);
 
-    if (trackAlreadyAdded) {
+    if (exists) {
       return;
     }
 
@@ -68,11 +68,6 @@ function App() {
     setPlaylistName(newName);
   };
 
-  const savePlaylist = () => {
-    const trackUris = playlistTracks.map((track) => track.uri);
-    console.log('Saving playlist:', playlistName, trackUris);
-  };
-
   const handleSpotifyLogin = async () => {
     setAuthError('');
     await redirectToSpotifyLogin();
@@ -82,6 +77,8 @@ function App() {
     logoutSpotify();
     setAccessToken(null);
     setSearchResults([]);
+    setPlaylistTracks([]);
+    setSaveStatus('');
   };
 
   const handleSearch = async (searchTerm) => {
@@ -100,6 +97,32 @@ function App() {
       setSearchError(error.message || 'Search failed.');
     } finally {
       setSearchLoading(false);
+    }
+  };
+
+  const savePlaylist = async () => {
+    if (!accessToken) {
+      setSaveStatus('Connect Spotify first.');
+      return;
+    }
+
+    if (!playlistTracks.length) {
+      setSaveStatus('Add at least one track before saving.');
+      return;
+    }
+
+    try {
+      setSaveStatus('Saving playlist...');
+
+      const trackUris = playlistTracks.map((track) => track.uri);
+
+      await savePlaylistToSpotify(playlistName, trackUris, accessToken);
+
+      setSaveStatus('Playlist saved to Spotify!');
+      setPlaylistTracks([]);
+      setPlaylistName('New Playlist');
+    } catch (error) {
+      setSaveStatus(error.message || 'Failed to save playlist.');
     }
   };
 
@@ -168,6 +191,10 @@ function App() {
 
       {searchError ? (
         <p style={{ textAlign: 'center', color: '#ff6b6b' }}>{searchError}</p>
+      ) : null}
+
+      {saveStatus ? (
+        <p style={{ textAlign: 'center' }}>{saveStatus}</p>
       ) : null}
 
       <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center' }}>

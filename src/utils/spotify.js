@@ -155,3 +155,71 @@ export async function searchSpotify(searchTerm, accessToken) {
     uri: track.uri,
   }));
 }
+
+export async function savePlaylistToSpotify(
+  playlistName,
+  trackUris,
+  accessToken
+) {
+  if (!playlistName || !trackUris.length) {
+    throw new Error('Playlist name and tracks are required.');
+  }
+
+  const userResponse = await fetch('https://api.spotify.com/v1/me', {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!userResponse.ok) {
+    const errorText = await userResponse.text();
+    throw new Error(`Failed to fetch user profile. ${errorText}`);
+  }
+
+  const userData = await userResponse.json();
+  const userId = userData.id;
+
+  const createResponse = await fetch(
+    `https://api.spotify.com/v1/users/${userId}/playlists`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: playlistName,
+        public: true,
+      }),
+    }
+  );
+
+  if (!createResponse.ok) {
+    const errorText = await createResponse.text();
+    throw new Error(`Failed to create playlist. ${errorText}`);
+  }
+
+  const playlistData = await createResponse.json();
+  const playlistId = playlistData.id;
+
+  const addTracksResponse = await fetch(
+    `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        uris: trackUris,
+      }),
+    }
+  );
+
+  if (!addTracksResponse.ok) {
+    const errorText = await addTracksResponse.text();
+    throw new Error(`Failed to add tracks to playlist. ${errorText}`);
+  }
+
+  return true;
+}
