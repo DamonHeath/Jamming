@@ -11,6 +11,7 @@ function App() {
   ]);
 
   const [playlistTracks, setPlaylistTracks] = useState([]);
+  const [playlistName, setPlaylistName] = useState('New Playlist');
 
   const addTrack = (track) => {
     const trackAlreadyAdded = playlistTracks.some(
@@ -30,6 +31,10 @@ function App() {
     );
   };
 
+  const updatePlaylistName = (newName) => {
+    setPlaylistName(newName);
+  };
+
   return (
     <div style={{ padding: '2rem' }}>
       <h1 style={{ textAlign: 'center' }}>Jammming</h1>
@@ -40,7 +45,12 @@ function App() {
 
       <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center' }}>
         <SearchResults tracks={searchResults} onAdd={addTrack} />
-        <Playlist tracks={playlistTracks} onRemove={removeTrack} />
+        <Playlist
+          tracks={playlistTracks}
+          onRemove={removeTrack}
+          playlistName={playlistName}
+          onNameChange={updatePlaylistName}
+        />
       </div>
     </div>
   );

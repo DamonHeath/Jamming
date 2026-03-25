@@ -1,6 +1,10 @@
 import TrackList from '../TrackList/TrackList';
 
-function Playlist({ tracks, onRemove }) {
+function Playlist({ tracks, onRemove, playlistName, onNameChange }) {
+  const handleNameChange = (event) => {
+    onNameChange(event.target.value);
+  };
+
   return (
     <div
       style={{
@@ -13,7 +17,8 @@ function Playlist({ tracks, onRemove }) {
     >
       <input
         type="text"
-        defaultValue="New Playlist"
+        value={playlistName}
+        onChange={handleNameChange}
         style={{
           width: '100%',
           padding: '0.5rem',
