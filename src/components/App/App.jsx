@@ -5,9 +5,27 @@ import Playlist from '../Playlist/Playlist';
 
 function App() {
   const [searchResults] = useState([
-    { id: 1, name: 'Blinding Lights', artist: 'The Weeknd', album: 'After Hours' },
-    { id: 2, name: 'Levitating', artist: 'Dua Lipa', album: 'Future Nostalgia' },
-    { id: 3, name: 'As It Was', artist: 'Harry Styles', album: 'Harry’s House' },
+    {
+      id: 1,
+      name: 'Blinding Lights',
+      artist: 'The Weeknd',
+      album: 'After Hours',
+      uri: 'spotify:track:1',
+    },
+    {
+      id: 2,
+      name: 'Levitating',
+      artist: 'Dua Lipa',
+      album: 'Future Nostalgia',
+      uri: 'spotify:track:2',
+    },
+    {
+      id: 3,
+      name: 'As It Was',
+      artist: 'Harry Styles',
+      album: 'Harry’s House',
+      uri: 'spotify:track:3',
+    },
   ]);
 
   const [playlistTracks, setPlaylistTracks] = useState([]);
@@ -35,11 +53,22 @@ function App() {
     setPlaylistName(newName);
   };
 
+  const savePlaylist = () => {
+    const trackUris = playlistTracks.map((track) => track.uri);
+    console.log('Saving playlist:', playlistName, trackUris);
+  };
+
   return (
     <div style={{ padding: '2rem' }}>
       <h1 style={{ textAlign: 'center' }}>Jammming</h1>
 
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginBottom: '2rem',
+        }}
+      >
         <SearchBar />
       </div>
 
@@ -50,6 +79,7 @@ function App() {
           onRemove={removeTrack}
           playlistName={playlistName}
           onNameChange={updatePlaylistName}
+          onSave={savePlaylist}
         />
       </div>
     </div>

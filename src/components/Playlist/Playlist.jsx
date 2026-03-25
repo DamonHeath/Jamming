@@ -1,6 +1,6 @@
 import TrackList from '../TrackList/TrackList';
 
-function Playlist({ tracks, onRemove, playlistName, onNameChange }) {
+function Playlist({ tracks, onRemove, playlistName, onNameChange, onSave }) {
   const handleNameChange = (event) => {
     onNameChange(event.target.value);
   };
@@ -32,6 +32,7 @@ function Playlist({ tracks, onRemove, playlistName, onNameChange }) {
       <TrackList tracks={tracks} onAction={onRemove} actionSymbol="-" />
 
       <button
+        onClick={onSave}
         style={{
           marginTop: '1rem',
           width: '100%',
