@@ -1,6 +1,6 @@
 import TrackList from '../TrackList/TrackList';
 
-function Playlist({ tracks }) {
+function Playlist({ tracks, onRemove }) {
   return (
     <div
       style={{
@@ -24,7 +24,7 @@ function Playlist({ tracks }) {
         }}
       />
 
-      <TrackList tracks={tracks} actionSymbol="-" />
+      <TrackList tracks={tracks} onAction={onRemove} actionSymbol="-" />
 
       <button
         style={{

@@ -24,6 +24,12 @@ function App() {
     setPlaylistTracks((prevTracks) => [...prevTracks, track]);
   };
 
+  const removeTrack = (track) => {
+    setPlaylistTracks((prevTracks) =>
+      prevTracks.filter((savedTrack) => savedTrack.id !== track.id)
+    );
+  };
+
   return (
     <div style={{ padding: '2rem' }}>
       <h1 style={{ textAlign: 'center' }}>Jammming</h1>
@@ -34,7 +40,7 @@ function App() {
 
       <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center' }}>
         <SearchResults tracks={searchResults} onAdd={addTrack} />
-        <Playlist tracks={playlistTracks} />
+        <Playlist tracks={playlistTracks} onRemove={removeTrack} />
       </div>
     </div>
   );
